@@ -1,0 +1,44 @@
+ALTER TABLE PREDMET MODIFY SEMESTR int CHECK (SEMESTR > 0 & SEMESTR <= 10);
+
+ALTER TABLE USPISH
+ADD CONSTRAINT PNOM FOREIGN KEY (PNOM)
+REFERENCES PREDMET(PNOM)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE PREDMET
+ADD POLE float;
+
+ALTER TABLE PREDMET CHANGE POLE POLE1 float;
+
+ALTER TABLE PREDMET CHANGE POLE1 POLE1 varchar(15);
+
+ALTER TABLE PREDMET CHANGE POLE1 POLE1 varchar(15) AFTER PNAME;
+
+ALTER TABLE PREDMET DROP COLUMN POLE1;
+
+ALTER TABLE VYKLAD CHANGE OKLAD OKLAD DECIMAL(10,2);
+INSERT INTO VYKLAD (VNOM, VFAM, VIMA, VOTCH, KAF, POSADA, OKLAD) VALUES
+(10001, 'LastName1', 'FirstName1', 'MiddleName1', 'ПМ', 'posada1', 1222.20),
+(12332, 'LastName2', 'FirstName2', 'MiddleName2', 'КН', 'posada2', 3433.20),
+(03244, 'LastName3', 'FirstName3', 'MiddleName3', 'ІПЗ', 'posada1', 12344.20),
+(31234, 'LastName4', 'FirstName4', 'MiddleName4', 'АУТП', 'posada2', 4454.20),
+(21321, 'LastName5', 'FirstName5', 'MiddleName5', 'КН', 'posada3', 5323.20),
+(10034, 'LastName6', 'FirstName6', 'MiddleName6', 'ПМ', 'posada1', 212.20);
+
+INSERT INTO PREDMET (PNOM, PNAME, VNOM, GOD, SEMESTR) VALUES
+(301, 'Бази данних', 10001, 200, 6),
+(123, 'Математичний Аналіз', 12332, 180, 2),
+(312, 'Операційні Системи', 10034, 150, 1),
+(432, 'Оптимізація обчислень', 12332, 80, 6),
+(122, 'Лінійна алгебра та аналітична геометрія', 10001, 100, 1),
+(001, 'Історія', 3244, 120, 1);
+
+DELETE FROM VYKLAD WHERE VFAM = 'ІВАНОВ';
+DELETE FROM VYKLAD WHERE VFAM = 'LastName4';
+
+UPDATE PREDMET SET GOD=106, SEMESTR=6 WHERE PNAME='Бази Данних';
+
+ALTER TABLE VYKLAD ADD COLUMN OPLATA DOUBLE AS (0.13*OKLAD);
+
+ALTER TABLE VYKLAD DROP COLUMN OPLATA;
