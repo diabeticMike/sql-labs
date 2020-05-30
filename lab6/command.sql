@@ -11,8 +11,7 @@ CREATE TRIGGER InsertSetStip BEFORE INSERT ON STUDENTS
     FOR EACH ROW
     BEGIN
         IF(NEW.FORM = 'бюджет') THEN
-            INSERT INTO STUDENTS (SNOM, SFAM, SIMA, SOTCH, STIP, GRUP, FORM)
-            VALUES(NEW.SNOM, NEW.SFAM, NEW.SIMA, NEW.SOTCH, 1000, NEW.GRUP, NEW.FORM);
+            SET NEW.STIP = 900;
         end if;
     end;
 
@@ -21,7 +20,7 @@ CREATE TRIGGER StudentFormException BEFORE INSERT ON STUDENTS
     BEGIN
         IF(NEW.FORM NOT IN ('бюджет','платна')) THEN
             SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Form is incorrect';
+            SET MESSAGE_TEXT = 'Study form is incorrect';
         end if;
     end;
 
@@ -44,11 +43,10 @@ CREATE TRIGGER HelloBeforePredmetInsert BEFORE INSERT ON PREDMET
         SET MESSAGE_TEXT = 'Hello Before';
     end;
 
-CREATE TRIGGER HelloAfterPredmetInsert AFTER INSERT ON PREDMET
+CREATE TRIGGER UpdateVykladPredmet BEFORE DELETE ON VYKLAD
     FOR EACH ROW
     BEGIN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Hello After';
+        UPDATE PREDMET SET VNOM = NULL WHERE VNOM = OLD.VNOM;
     end;
 
 INSERT INTO PREDMET (PNOM, PNAME, VNOM, GOD, SEMESTR) VALUES
